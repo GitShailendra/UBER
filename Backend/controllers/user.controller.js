@@ -1,22 +1,44 @@
-const { validationResult } = require('express-validator');
-const userModel = require('../models/user.model');
-const userService  = require('../services/user.services')
+const { validationResult } = require("express-validator");
+const userModel = require("../models/user.model");
+const userService = require("../services/user.services");
 
-module.exports.registerUser = async (req,res,next)=>{
-    const error = validationResult(req);
-    console.log('validation result errors',error)
-    // error.isEmpty() returns true if there are no errors 
-    if(!error.isEmpty()){
-        return res.status(400).json({message:'Invalid request',errors:error.array()});
-    };
-    const {fullname,email,password}  = req.body;
-    const hashedPassword = await userModel.hashPasswords(password)
-    const user = await userService.createUser({
-        firstName:fullname.firstName,
-        lastName:fullname.lastName,
-        email,
-        password:hashedPassword
-    });
-    const token = user.generateAuthToken();
-    res.status(201).json({token,user})
-}
+module.exports.registerUser = async (req, res, next) => {
+  const error = validationResult(req);
+  console.log("validation result errors", error);
+  // error.isEmpty() returns true if there are no errors
+  if (!error.isEmpty()) {
+    return res
+      .status(400)
+      .json({ message: "Invalid request", errors: error.array() });
+  }
+  const { fullname, email, password } = req.body;
+  const hashedPassword = await userModel.hashPasswords(password);
+  const user = await userService.createUser({
+    firstName: fullname.firstName,
+    lastName: fullname.lastName,
+    email,
+    password: hashedPassword,
+  });
+  const token = user.generateAuthToken();
+  res.status(201).json({ token, user });
+};
+
+module.exports.loginUser = async (req, res, next) => {
+  const error = validationResult(req);
+  if (!error.isEmpty()) {
+    return res
+      .status(400)
+      .json({ message: "Invalid request", errors: error.array() });
+  }
+  const { email, password } = req.body;
+  const user = await userModel.findOne({ email }).select('+password')
+  if (!user) {
+    return res.status(401).json({ message: "Inavlid email or password" });
+  }
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    return res.status(401).json({ message: "Inavlid email or password" });
+  }
+  const token = user.generateAuthToken();
+  res.status(200).json({ token, user });
+};
