@@ -160,3 +160,74 @@ If the email or password is incorrect, the response will contain a JSON object w
     "message": "Invalid email or password"
 }
 ```
+
+## Get User Profile
+
+### Description
+This API endpoint allows an authenticated user to retrieve their profile information.
+
+### Endpoint
+`GET /get-profile`
+
+### Request Headers
+The request must include the authentication token in the `Authorization` header or as a cookie.
+
+#### Example Request Headers
+```
+Authorization: Bearer <token>
+```
+
+### Response
+The response will be a JSON object containing the user's profile information.
+
+#### Example Response
+```json
+{
+    "_id": "60d0fe4f5311236168a109ca",
+    "fullname": {
+        "firstName": "John",
+        "lastName": "Doe"
+    },
+    "email": "john.doe@example.com"
+}
+```
+
+### Status Codes
+- `200 OK`: The user's profile information was successfully retrieved.
+- `401 Unauthorized`: The user is not authenticated.
+
+### Method
+`GET`
+
+## User Logout
+
+### Description
+This API endpoint allows an authenticated user to log out by invalidating their authentication token.
+
+### Endpoint
+`GET /logout`
+
+### Request Headers
+The request must include the authentication token in the `Authorization` header or as a cookie.
+
+#### Example Request Headers
+```
+Authorization: Bearer <token>
+```
+
+### Response
+The response will be a JSON object containing a message indicating that the user was successfully logged out.
+
+#### Example Response
+```json
+{
+    "message": "logged out successfully"
+}
+```
+
+### Status Codes
+- `200 OK`: The user was successfully logged out.
+- `401 Unauthorized`: The user is not authenticated.
+
+### Method
+`GET`

@@ -4,10 +4,12 @@ const express = require('express');
 const cors = require('cors');
 const conncetDb = require('./db/db');
 const userRoute = require('./routes/user.routes')
+const cookieParser = require('cookie-parser')
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
+app.use(cookieParser());
 conncetDb();
 app.use('/users',userRoute)
 
