@@ -1,7 +1,7 @@
 import React from 'react'
 import BackgroundImage from '../assets/home/Home.jpg'
 import { Link } from 'react-router-dom'
-const Home = () => {
+const Start = () => {
   return (
     <div className='h-screen pt-8 w-full flex justify-between flex-col' style={{ backgroundImage: `url(${BackgroundImage})`, backgroundSize: 'cover' }}>
       <img className='w-14 ml-9' src="https://logos-world.net/wp-content/uploads/2020/05/Uber-Logo.png" alt="" />
@@ -13,4 +13,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Start

@@ -3,6 +3,10 @@ const userModel = require("../models/user.model");
 const userService = require("../services/user.services");
 const BlacklistToken  = require('../models/blacklistToken.model')
 module.exports.registerUser = async (req, res, next) => {
+   const { fullname, email, password } = req.body;
+   console.log(fullname)
+   console.log(email)
+   console.log(password)
   const error = validationResult(req);
   console.log("validation result errors", error);
   // error.isEmpty() returns true if there are no errors
@@ -11,7 +15,7 @@ module.exports.registerUser = async (req, res, next) => {
       .status(400)
       .json({ message: "Invalid request", errors: error.array() });
   }
-  const { fullname, email, password } = req.body;
+  // const { fullname, email, password } = req.body;
   const userExist = await userModel.findOne({email});
   if (userExist) {
     return res.status(400).json({ message: "User already exist" });
