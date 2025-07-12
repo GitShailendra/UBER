@@ -8,6 +8,7 @@ module.exports.registerCaptain = async (req,res)=>{
         return res.status(400).json({message:errors.array()});
     }
     const {fullname,email,password,vehicle} = req.body;
+    console.log(vehicle)
     const existingUser = await captainModel.findOne({email});
     if(existingUser){
         return res.status(400).json({message:'Captain already exists'});

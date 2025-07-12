@@ -2,28 +2,57 @@ import React, { useContext } from 'react'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CaptainDataContext } from '../context/CaptainContext';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 const CaptainSignup = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [vehicleColor, setVehicleColor] = useState("")
+  const [vehicleCapacity, setVehicleCapacity] = useState("")
+  const [vehiclePlate, setVehiclePlate] = useState("")
+  const [vehicleType, setVehicleType] = useState("")
   const [formData, setFormData] = useState({})
-  const {captain,setCaptain} = useContext(CaptainDataContext)
-  const handleSubmit = (e) => {
+  const { captain, setCaptain } = useContext(CaptainDataContext)
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormData({
-      email,
+    try {
+      const captainData = {
+        email,
       password,
-      fullName: {
+      fullname: {
         firstName,
         lastName
+      },
+      vehicle:{
+        color:vehicleColor,
+        plate:vehiclePlate,
+        vehicleType:vehicleType,
+        capacity:vehicleCapacity
       }
-    });
-    console.log('formdata prints', formData);
+      }
+    console.log('formdata prints', captainData);
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captain/register`,captainData);
+    if(response.status===201){
+      const data = response.data;
+      setCaptain(data.captain);
+      localStorage.setItem('token',data.token);
+      navigate('/captain-home')
+    }
     setEmail('')
     setPassword('')
     setFirstName('')
     setLastName('')
+    setVehicleCapacity('')
+    setVehicleColor('')
+    setVehiclePlate('')
+    setVehicleType('')
+    } catch (error) {
+      console.log(error)
+    }
   }
   return (
     <div className='p-7 flex flex-col justify-between h-screen '>
@@ -36,8 +65,25 @@ const CaptainSignup = () => {
           </div>
           <h3 className='text-lg mb-2 font-medium'>What's your email</h3>
           <input type="email" placeholder='enter you mail here' value={email} onChange={(e) => setEmail(e.target.value)} required className='w-full py-2 px-4 border bg-[#eeeeee] mb-5 rounded  text-lg placeholder:text-sm' />
+          <h3 className='text-lg mb-2 font-medium'>Vehicle Details</h3>
+          <select
+            value={vehicleType}
+            onChange={(e) => setVehicleType(e.target.value)}
+            required
+            className='w-full py-2 px-4 border bg-[#eeeeee] mb-5 rounded text-lg'
+          >
+            <option value="" disabled>Select Vehicle Type</option>
+            <option value="Car">Car</option>
+            <option value="Bike">Bike</option>
+            <option value="Auto">Auto</option>
+          </select>
+
+          <input type="text" placeholder='Vehicle Color' value={vehicleColor} onChange={(e) => setVehicleColor(e.target.value)} required className='w-full py-2 px-4 border bg-[#eeeeee] mb-3 rounded text-lg placeholder:text-sm' />
+          <input type="text" placeholder='Vehicle Capacity' value={vehicleCapacity} onChange={(e) => setVehicleCapacity(e.target.value)} required className='w-full py-2 px-4 border bg-[#eeeeee] mb-3 rounded text-lg placeholder:text-sm' />
+          <input type="text" placeholder='Vehicle Plate Number' value={vehiclePlate} onChange={(e) => setVehiclePlate(e.target.value)} required className='w-full py-2 px-4 border bg-[#eeeeee] mb-3 rounded text-lg placeholder:text-sm' />
+
           <h3 className='text-lg font-medium mb-2'> Enter Password</h3>
-          <input type="password" placeholder='enter your password here' value={password} onChange={(e) => setPassword(e.target.value)} required className='w-full py-2 px-4 border bg-[#eeeeee] mb-5 rounded text-lg placeholder:text-sm' />
+          <input type="password" placeholder='enter your password here' value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete='off' className='w-full py-2 px-4 border bg-[#eeeeee] mb-5 rounded text-lg placeholder:text-sm' />
           <button className='w-full bg-[#10b471] text-white text-xl mb-3 py-3 rounded font-semibold px-4'>Login As Captain</button>
         </form>
         <p className='text-center'>Already have an account?<Link to="/captain-login" className='text-blue-500'>Sign in as user</Link></p>

@@ -6,11 +6,11 @@ const authMiddleware = require('../middlewares/auth.middleware')
 router.post('/register',[
     body('fullname.firstName').isLength({min:3}).withMessage('Name must be at least'),
     body('email').isEmail().withMessage('Please enter a valid email'),
-    body('password').isLength({min:8}).withMessage('Password must be at least 6 char long'),
+    body('password').isLength({min:6}).withMessage('Password must be at least 6 char long'),
     body('vehicle.color').isLength({min:3}).withMessage('Vehicle color should be at least 3 char long'),
     body('vehicle.plate').isLength({min:3}).withMessage('Vehicle plate should be at least 3 char long'),
     body('vehicle.capacity').isLength({min:1}).withMessage('Vehicle capacity should be at least 1 '),
-    body('vehicle.vehicleType').isIn(['car','bike','auto']).withMessage('Invalid type'),
+    body('vehicle.vehicleType').isIn(['Car','Bike','Auto']).withMessage('Invalid type'),
     
 
 ],captainController.registerCaptain);
