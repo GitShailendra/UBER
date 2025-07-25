@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { CaptainDataContext } from '../context/CaptainContext';
 
 const CaptainLogin = () => {
   const [captainEmail, setCaptainEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [captainData, setCaptainData] = useState({});
-
-  const handleSubmit = (e) => {
+  const { captain, setCaptain } = useContext(CaptainDataContext)
+  const navigate = useNavigate();
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log(captainEmail, password);
-    setCaptainData({
-      captainEmail: captainEmail,
+    const captainData = {
+      email: captainEmail,
       password: password
-    });
+    }
+    console.log(captainData);
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captain/login`, captainData);
+    if(response.status === 200) {
+      const data = response.data;
+      setCaptain(data.captain);
+      localStorage.setItem('token', data.token);
+      navigate('/captain-home');
+    }
     console.log(captainData);
     setCaptainEmail('');
     setPassword('');
@@ -43,7 +54,7 @@ const CaptainLogin = () => {
             className='w-full py-2 px-4 border bg-[#eeeeee] mb-7 rounded text-lg placeholder:text-sm'
           />
           
-          <button className='w-full bg-[#10b471] text-white text-xl mb-3 py-3 rounded font-semibold px-4'>
+          <button className='w-full cursor-pointer bg-[#10b471] text-white text-xl mb-3 py-3 rounded font-semibold px-4'>
             Login as Captain
           </button>
         </form>

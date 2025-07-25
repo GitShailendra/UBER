@@ -16,7 +16,7 @@ router.post('/register',[
 ],captainController.registerCaptain);
 router.post('/login',[
     body('email').isEmail().withMessage('Please enter a valid email'),
-    body('password').isLength({min:8}).withMessage('Password must be at least')
+    body('password').isLength({min:6}).withMessage('Password must be at least')
 ],captainController.login);
 router.get('/get-profile',authMiddleware.authCaptain,captainController.getProfile);
 router.get('/logout',authMiddleware.authCaptain,captainController.logout)
