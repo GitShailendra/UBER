@@ -11,7 +11,6 @@ const UserProtectedWrapper = ({ children }) => {
     if (!token) {
     navigate('/login')
   }
-  },[token])
   axios.get(`${import.meta.env.VITE_BASE_URL}/users/get-profile`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -20,14 +19,16 @@ const UserProtectedWrapper = ({ children }) => {
     console.log('user profile response', response)
     if(response.status === 200 ) {
       console.log('user profile', response.data.user)
-      setIsLoading(false)
       setUser(response.data.user)
+      setIsLoading(false)
     }
   }).catch((error)=>{
     localStorage.removeItem('token');
     setIsLoading(false);
     navigate('/login');
   })
+  },[token])
+  
   if(isLoading) {
     return <div className='flex justify-center items-center h-screen'>Loading...</div>
   }

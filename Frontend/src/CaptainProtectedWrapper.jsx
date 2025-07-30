@@ -11,8 +11,6 @@ const CaptainProtectedWrapper = ({ children }) => {
     if (!token) {
     navigate('/captain-login')
   }
-  },[token])
-
   axios.get(`${import.meta.env.VITE_BASE_URL}/captain/get-profile`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -29,6 +27,9 @@ const CaptainProtectedWrapper = ({ children }) => {
     setIsLoading(false);
     navigate('/captain-login');
   })
+  },[token])
+
+  
   if(isLoading) {
     return <div className='flex justify-center items-center h-screen'>Loading...</div>
   }
